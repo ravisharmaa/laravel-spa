@@ -1,5 +1,11 @@
 import localforage from 'localforage'
-export const settoken = (state, token) => {
-    console.log('there');
-    localforage.setItem('authToken')
-}
+import { isEmpty } from 'lodash'
+
+export const settingToken = (state, token) => {
+    if(isEmpty(token)){
+        localforage.removeItem('authToken',token);
+        return;
+    }
+    localforage.setItem('authToken',token)
+
+};

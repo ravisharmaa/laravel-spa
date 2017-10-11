@@ -4,11 +4,16 @@
  * includes Vue and other libraries. It is a great starting point when
  * building robust, powerful web applications using Vue and Laravel.
  */
-
+import localforage from 'localforage'
 require('./bootstrap');
 import router from './router';
 import store from './vuex';
 
+localforage.config({
+    driver:localforage.LOCALSTORAGE,
+    storeName:'webapp'
+
+})
 window.Vue = require('vue');
 
 /**
