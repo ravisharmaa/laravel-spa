@@ -48894,6 +48894,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "register", function() { return register; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "login", function() { return login; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setToken", function() { return setToken; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "fetchUser", function() { return fetchUser; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__helpers___ = __webpack_require__(65);
 
 
@@ -48913,7 +48914,7 @@ var login = function login(_ref3, _ref4) {
 
     return axios.post('/api/login', payload.formData).then(function (response) {
         dispatch('setToken', response.data.meta.token).then(function () {
-            return console.log('fetch user');
+            dispatch('fetchUser');
         });
     }).catch(function (error) {
         context.errors = error.response.data.errors;
@@ -48927,6 +48928,14 @@ var setToken = function setToken(_ref5, token) {
     Object(__WEBPACK_IMPORTED_MODULE_0__helpers___["a" /* setHttpToken */])(token);
 };
 
+var fetchUser = function fetchUser(_ref6) {
+    var commit = _ref6.commit;
+
+    return axios.get('api/me').then(function (response) {
+        console.log(response);
+    });
+};
+
 /***/ }),
 /* 65 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
@@ -48938,9 +48947,9 @@ var setToken = function setToken(_ref5, token) {
 
 var setHttpToken = function setHttpToken(token) {
     if (Object(__WEBPACK_IMPORTED_MODULE_0_lodash__["isEmpty"])(token)) {
-        window.axios.default.headers.common['Authorization'] = null;
+        window.axios.defaults.headers.common['Authorization'] = null;
     }
-    window.axios.default.headers.common['Authorization'] = 'Bearer' + token;
+    window.axios.defaults.headers.common['Authorization'] = 'Bearer' + token;
 };
 
 /***/ }),
@@ -48969,7 +48978,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 var settingToken = function settingToken(state, token) {
+
     if (Object(__WEBPACK_IMPORTED_MODULE_1_lodash__["isEmpty"])(token)) {
+        console.log('here');
         __WEBPACK_IMPORTED_MODULE_0_localforage___default.a.removeItem('authToken', token);
         return;
     }

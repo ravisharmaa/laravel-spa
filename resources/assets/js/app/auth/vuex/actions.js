@@ -8,11 +8,11 @@ export const register = ({dispatch}, {payload, context}) => {
     })
 
 };
-export const login = ({dispatch}, {payload, context}) => {
+export const login = ({dispatch},{payload,context}) => {
     return axios.post('/api/login',payload.formData).then((response) => {
         dispatch('setToken',response.data.meta.token).then(() => {
-           return  console.log('fetch user');
-       })
+            dispatch('fetchUser')
+        })
     }).catch((error) => {
         context.errors = error.response.data.errors
     })
@@ -21,6 +21,11 @@ export const login = ({dispatch}, {payload, context}) => {
 
 export const setToken = ({commit}, token) => {
     commit('settingToken',token);
-    setHttpToken(token)
+    setHttpToken(token);
+};
 
+export const fetchUser = ({commit}) =>{
+    return axios.get('api/me').then((response) => {
+        console.log(response)
+    })
 };
