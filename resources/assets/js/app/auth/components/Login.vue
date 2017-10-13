@@ -75,6 +75,8 @@
                         formData: this.formData
                     },
                     context:this
+                }).then(() =>{
+                    this.$router.replace({name:'home'})
                 })
             }
         }

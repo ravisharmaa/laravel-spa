@@ -48045,11 +48045,15 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
         login: 'auth/login'
     }), {
         submitForm: function submitForm() {
+            var _this = this;
+
             this.login({
                 payload: {
                     formData: this.formData
                 },
                 context: this
+            }).then(function () {
+                _this.$router.replace({ name: 'home' });
             });
         }
     })
@@ -48366,11 +48370,15 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
         register: 'auth/register'
     }), {
         submitForm: function submitForm() {
+            var _this = this;
+
             this.register({
                 payload: {
                     formData: this.formData
                 },
                 context: this
+            }).then(function () {
+                _this.$router.replace({ name: 'home' });
             });
         }
     })
@@ -48880,7 +48888,7 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vuex
     user: {
         authenticated: false,
         data: {
-            name: 'Ravi Bastola'
+            name: ''
         }
     }
 });
@@ -48903,7 +48911,11 @@ var register = function register(_ref, _ref2) {
     var payload = _ref2.payload,
         context = _ref2.context;
 
-    return axios.post('/api/register', payload.formData).then(function (response) {}).catch(function (error) {
+    return axios.post('/api/register', payload.formData).then(function (response) {
+        dispatch('setToken', response.data.meta.token).then(function () {
+            dispatch('fetchUser');
+        });
+    }).catch(function (error) {
         context.errors = error.response.data.errors;
     });
 };
@@ -48932,7 +48944,8 @@ var fetchUser = function fetchUser(_ref6) {
     var commit = _ref6.commit;
 
     return axios.get('api/me').then(function (response) {
-        console.log(response);
+        commit('setAuthenticated', true);
+        commit('setUserData', response.data.data);
     });
 };
 
@@ -48970,6 +48983,8 @@ var user = function user(state) {
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "settingToken", function() { return settingToken; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setAuthenticated", function() { return setAuthenticated; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setUserData", function() { return setUserData; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_localforage__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_localforage___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_localforage__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_lodash__ = __webpack_require__(5);
@@ -48985,6 +49000,14 @@ var settingToken = function settingToken(state, token) {
         return;
     }
     __WEBPACK_IMPORTED_MODULE_0_localforage___default.a.setItem('authToken', token);
+};
+
+var setAuthenticated = function setAuthenticated(state, trueOrFalse) {
+    state.user.authenticated = trueOrFalse;
+};
+
+var setUserData = function setUserData(state, data) {
+    state.user.data = data;
 };
 
 /***/ }),
