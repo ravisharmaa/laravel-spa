@@ -28805,7 +28805,7 @@ module.exports = defaults;
 
 /* WEBPACK VAR INJECTION */(function(global) {var require;var require;/*!
     localForage -- Offline Storage, Improved
-    Version 1.5.1
+    Version 1.5.2
     https://localforage.github.io/localForage
     (c) 2013-2017 Mozilla, Apache License 2.0
 */
@@ -30877,13 +30877,7 @@ var DefaultDrivers = {
     LOCALSTORAGE: localStorageWrapper
 };
 
-var DriverType = {
-    INDEXEDDB: asyncStorage._driver,
-    WEBSQL: webSQLStorage._driver,
-    LOCALSTORAGE: localStorageWrapper._driver
-};
-
-var DefaultDriverOrder = [DriverType.INDEXEDDB, DriverType.WEBSQL, DriverType.LOCALSTORAGE];
+var DefaultDriverOrder = [DefaultDrivers.INDEXEDDB._driver, DefaultDrivers.WEBSQL._driver, DefaultDrivers.LOCALSTORAGE._driver];
 
 var LibraryMethods = ['clear', 'getItem', 'iterate', 'key', 'keys', 'length', 'removeItem', 'setItem'];
 
@@ -30931,15 +30925,17 @@ var LocalForage = function () {
     function LocalForage(options) {
         _classCallCheck(this, LocalForage);
 
-        for (var driverTypeKey in DriverType) {
-            if (DriverType.hasOwnProperty(driverTypeKey)) {
-                this[driverTypeKey] = DriverType[driverTypeKey];
+        for (var driverTypeKey in DefaultDrivers) {
+            if (DefaultDrivers.hasOwnProperty(driverTypeKey)) {
+                var driver = DefaultDrivers[driverTypeKey];
+                var driverName = driver._driver;
+                this[driverTypeKey] = driverName;
 
-                if (!DefinedDrivers[driverTypeKey]) {
+                if (!DefinedDrivers[driverName]) {
                     // we don't need to wait for the promise,
                     // since the default drivers can be defined
                     // in a blocking manner
-                    this.defineDriver(DefaultDrivers[driverTypeKey]);
+                    this.defineDriver(driver);
                 }
             }
         }
@@ -31507,8 +31503,8 @@ __webpack_require__(15);
 
 
 __WEBPACK_IMPORTED_MODULE_0_localforage___default.a.config({
-  driver: __WEBPACK_IMPORTED_MODULE_0_localforage___default.a.LOCALSTORAGE,
-  storeName: 'webapp'
+    driver: __WEBPACK_IMPORTED_MODULE_0_localforage___default.a.LOCALSTORAGE,
+    storeName: 'webapp'
 
 });
 window.Vue = __webpack_require__(1);
@@ -31521,11 +31517,14 @@ window.Vue = __webpack_require__(1);
 
 Vue.component('app', __webpack_require__(68));
 Vue.component('navigation', __webpack_require__(71));
+__WEBPACK_IMPORTED_MODULE_2__vuex__["a" /* default */].dispatch('auth/setToken').then(function () {
+    console.log('fetch user');
+});
 
 var app = new Vue({
-  el: '#app',
-  router: __WEBPACK_IMPORTED_MODULE_1__router__["a" /* default */],
-  store: __WEBPACK_IMPORTED_MODULE_2__vuex__["a" /* default */]
+    el: '#app',
+    router: __WEBPACK_IMPORTED_MODULE_1__router__["a" /* default */],
+    store: __WEBPACK_IMPORTED_MODULE_2__vuex__["a" /* default */]
 });
 
 /***/ }),
@@ -47941,7 +47940,7 @@ var Component = normalizeComponent(
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "resources\\assets\\js\\app\\auth\\components\\Login.vue"
+Component.options.__file = "resources/assets/js/app/auth/components/Login.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key.substr(0, 2) !== "__"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] Login.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -48261,7 +48260,7 @@ var Component = normalizeComponent(
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "resources\\assets\\js\\app\\auth\\components\\Registration.vue"
+Component.options.__file = "resources/assets/js/app/auth/components/Registration.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key.substr(0, 2) !== "__"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] Registration.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -48658,7 +48657,7 @@ var Component = normalizeComponent(
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "resources\\assets\\js\\app\\home\\components\\Home.vue"
+Component.options.__file = "resources/assets/js/app/home/components/Home.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key.substr(0, 2) !== "__"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] Home.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -48778,7 +48777,7 @@ var Component = normalizeComponent(
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "resources\\assets\\js\\app\\timeline\\components\\TimleineIndex.vue"
+Component.options.__file = "resources/assets/js/app/timeline/components/TimleineIndex.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key.substr(0, 2) !== "__"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] TimleineIndex.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -48902,8 +48901,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "register", function() { return register; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "login", function() { return login; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setToken", function() { return setToken; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "checkTokenExists", function() { return checkTokenExists; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "fetchUser", function() { return fetchUser; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__helpers___ = __webpack_require__(65);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_lodash__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_lodash___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_lodash__);
 
 
 var register = function register(_ref, _ref2) {
@@ -48936,12 +48938,23 @@ var login = function login(_ref3, _ref4) {
 var setToken = function setToken(_ref5, token) {
     var commit = _ref5.commit;
 
+    if (Object(__WEBPACK_IMPORTED_MODULE_1_lodash__["isEmpty"])(token)) {
+        return dispatch('checkTokenExists').then(function (token) {
+            Object(__WEBPACK_IMPORTED_MODULE_0__helpers___["a" /* setHttpToken */])(token);
+        });
+    }
     commit('settingToken', token);
     Object(__WEBPACK_IMPORTED_MODULE_0__helpers___["a" /* setHttpToken */])(token);
 };
 
-var fetchUser = function fetchUser(_ref6) {
+var checkTokenExists = function checkTokenExists(_ref6, token) {
     var commit = _ref6.commit;
+
+    return localforage.getItem('');
+};
+
+var fetchUser = function fetchUser(_ref7) {
+    var commit = _ref7.commit;
 
     return axios.get('api/me').then(function (response) {
         commit('setAuthenticated', true);
@@ -49033,7 +49046,7 @@ var Component = normalizeComponent(
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "resources\\assets\\js\\components\\App.vue"
+Component.options.__file = "resources/assets/js/components/App.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key.substr(0, 2) !== "__"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] App.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -49126,7 +49139,7 @@ var Component = normalizeComponent(
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "resources\\assets\\js\\components\\Navigation.vue"
+Component.options.__file = "resources/assets/js/components/Navigation.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key.substr(0, 2) !== "__"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] Navigation.vue: functional components are not supported with templates, they should use render functions.")}
 
