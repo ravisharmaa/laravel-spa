@@ -24,12 +24,14 @@ window.Vue = require('vue');
 
 Vue.component('app', require('./components/App.vue'));
 Vue.component('navigation', require('./components/Navigation.vue'));
-store.dispatch('auth/setToken').then(() => {
-    console.log('fetch user');
-})
+
 
 const app = new Vue({
     el: '#app',
     router: router,
     store:store,
+});
+
+store.dispatch('auth/setToken').then(() => {
+    console.log('fetch user');
 });

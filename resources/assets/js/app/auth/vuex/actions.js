@@ -1,5 +1,7 @@
 import {setHttpToken} from "../../../helpers/";
 import {isEmpty} from 'lodash'
+import localforage from 'localforage'
+
 export const register = ({dispatch}, {payload, context}) => {
     return axios.post('/api/register',payload.formData).then((response) => {
         dispatch('setToken',response.data.meta.token).then(() => {
@@ -32,7 +34,12 @@ export const setToken = ({commit}, token) => {
 };
 
 export const checkTokenExists = ({commit}, token) => {
-    return localforage.getItem('')
+    return localforage.getItem('authToken').thne((token) => {
+        if(isEmpty().token){
+            return Promise.reject("NO TOKEN AVAILABLE")
+        }
+        return Promise.resolve(token)
+    })
 };
 
 
