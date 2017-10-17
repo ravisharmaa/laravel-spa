@@ -25,8 +25,8 @@ export const login = ({dispatch},{payload,context}) => {
 
 export const setToken = ({commit,dispatch}, token) => {
     if(isEmpty(token)){
-         dispatch('checkTokenExists').then((token) => {
-             setHttpToken(token)
+           return dispatch('checkTokenExists').then((token) => {
+                setHttpToken(token)
         })
     }
     commit('settingToken',token);
@@ -34,7 +34,7 @@ export const setToken = ({commit,dispatch}, token) => {
 };
 
 export const checkTokenExists = ({commit}, token) => {
-    return localforage.getItem('authToken').then((token) => {
+     return localforage.getItem('authToken').then((token) => {
         if(isEmpty(token)){
             return Promise.reject("NO TOKEN AVAILABLE")
         }

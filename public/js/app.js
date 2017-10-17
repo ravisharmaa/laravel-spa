@@ -31527,6 +31527,8 @@ __WEBPACK_IMPORTED_MODULE_2__vuex___["a" /* default */].dispatch('auth/setToken'
         __WEBPACK_IMPORTED_MODULE_2__vuex___["a" /* default */].dispatch('auth/clearAuth');
         __WEBPACK_IMPORTED_MODULE_1__router__["a" /* default */].replace({ name: 'login' });
     });
+}).catch(function () {
+    __WEBPACK_IMPORTED_MODULE_2__vuex___["a" /* default */].dispatch('auth/clearAuth');
 });
 
 var app = new Vue({
@@ -45337,6 +45339,8 @@ module.exports = function spread(callback) {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vue__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue_router__ = __webpack_require__(40);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__app_index__ = __webpack_require__(41);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__beforeEach__ = __webpack_require__(84);
+
 
 
 
@@ -45347,6 +45351,7 @@ var router = new __WEBPACK_IMPORTED_MODULE_1_vue_router__["a" /* default */]({
    routes: __WEBPACK_IMPORTED_MODULE_2__app_index__["a" /* routes */]
 });
 
+router.beforeEach(__WEBPACK_IMPORTED_MODULE_3__beforeEach__["a" /* default */]);
 /* harmony default export */ __webpack_exports__["a"] = (router);
 
 /***/ }),
@@ -48625,8 +48630,8 @@ if (false) {
     name: 'home',
     component: __WEBPACK_IMPORTED_MODULE_0__components__["a" /* Home */],
     meta: {
-        guest: true,
-        needsAuth: false
+        guest: false,
+        needsAuth: true
     }
 }]);
 
@@ -48745,8 +48750,8 @@ if (false) {
     name: 'timeline',
     component: __WEBPACK_IMPORTED_MODULE_0__components__["a" /* Timeline */],
     meta: {
-        guest: true,
-        needsAuth: false
+        guest: false,
+        needsAuth: true
     }
 }]);
 
@@ -48821,7 +48826,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 
-/* harmony default export */ __webpack_exports__["default"] = ({});
+/* harmony default export */ __webpack_exports__["default"] = ({
+    data: function data() {
+        return {
+            index: null
+        };
+    },
+    mounted: function mounted() {
+        return axios.get('/api/timeline').then(function (response) {
+            console.log(response);
+        });
+    }
+});
 
 /***/ }),
 /* 60 */
@@ -48953,7 +48969,7 @@ var setToken = function setToken(_ref5, token) {
         dispatch = _ref5.dispatch;
 
     if (Object(__WEBPACK_IMPORTED_MODULE_1_lodash__["isEmpty"])(token)) {
-        dispatch('checkTokenExists').then(function (token) {
+        return dispatch('checkTokenExists').then(function (token) {
             Object(__WEBPACK_IMPORTED_MODULE_0__helpers___["a" /* setHttpToken */])(token);
         });
     }
@@ -49400,6 +49416,41 @@ if (false) {
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 75 */,
+/* 76 */,
+/* 77 */,
+/* 78 */,
+/* 79 */,
+/* 80 */,
+/* 81 */,
+/* 82 */,
+/* 83 */,
+/* 84 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__vuex__ = __webpack_require__(61);
+
+var beforeEach = function beforeEach(to, from, next) {
+   __WEBPACK_IMPORTED_MODULE_0__vuex__["a" /* default */].dispatch('auth/checkTokenExists').then(function () {
+      console.log(to);
+      if (to.meta.guest) {
+         next({ name: 'home' });
+         return;
+      }
+      next();
+   }).catch(function () {
+      if (to.meta.needsAuth) {
+         next({ name: 'login' });
+         return;
+      }
+      next();
+   });
+};
+
+/* harmony default export */ __webpack_exports__["a"] = (beforeEach);
 
 /***/ })
 /******/ ]);

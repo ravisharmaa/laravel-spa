@@ -75,4 +75,9 @@ class AuthController extends Controller
 			'data'=>$request->user()
 		]);
 	}
+
+
+	public function getTimeLine() {
+		dd('here');
+	}
 }

@@ -22,4 +22,5 @@ Route::get('logout','Auth\AuthController@logout');
 
 Route::group(['middleware'=>'jwt.auth'], function() {
 	Route::get('/me','Auth\AuthController@getInfo');
+	Route::get('/timeline','Auth\AuthController@getTimeLine');
 });
