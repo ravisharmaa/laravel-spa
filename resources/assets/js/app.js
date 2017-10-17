@@ -7,13 +7,13 @@
 import localforage from 'localforage'
 require('./bootstrap');
 import router from './router';
-import store from './vuex';
+import store from './vuex/';
 
 localforage.config({
     driver:localforage.LOCALSTORAGE,
     storeName:'webapp'
 
-})
+});
 window.Vue = require('vue');
 
 /**
@@ -25,6 +25,12 @@ window.Vue = require('vue');
 Vue.component('app', require('./components/App.vue'));
 Vue.component('navigation', require('./components/Navigation.vue'));
 
+store.dispatch('auth/setToken').then(() => {
+    store.dispatch('auth/fetchUser').catch(() => {
+        store.dispatch('auth/clearAuth');
+        router.replace({name:'login'})
+    })
+});
 
 const app = new Vue({
     el: '#app',
@@ -32,6 +38,3 @@ const app = new Vue({
     store:store,
 });
 
-// store.dispatch('auth/setToken').then(() => {
-//     console.log('fetch user');
-// });

@@ -31494,7 +31494,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_localforage__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_localforage___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_localforage__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__router__ = __webpack_require__(39);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__vuex__ = __webpack_require__(61);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__vuex___ = __webpack_require__(61);
 
 /**
  * First we will load all of this project's JavaScript dependencies which
@@ -31507,8 +31507,8 @@ __webpack_require__(15);
 
 
 __WEBPACK_IMPORTED_MODULE_0_localforage___default.a.config({
-  driver: __WEBPACK_IMPORTED_MODULE_0_localforage___default.a.LOCALSTORAGE,
-  storeName: 'webapp'
+    driver: __WEBPACK_IMPORTED_MODULE_0_localforage___default.a.LOCALSTORAGE,
+    storeName: 'webapp'
 
 });
 window.Vue = __webpack_require__(1);
@@ -31522,15 +31522,18 @@ window.Vue = __webpack_require__(1);
 Vue.component('app', __webpack_require__(68));
 Vue.component('navigation', __webpack_require__(71));
 
-var app = new Vue({
-  el: '#app',
-  router: __WEBPACK_IMPORTED_MODULE_1__router__["a" /* default */],
-  store: __WEBPACK_IMPORTED_MODULE_2__vuex__["a" /* default */]
+__WEBPACK_IMPORTED_MODULE_2__vuex___["a" /* default */].dispatch('auth/setToken').then(function () {
+    __WEBPACK_IMPORTED_MODULE_2__vuex___["a" /* default */].dispatch('auth/fetchUser').catch(function () {
+        __WEBPACK_IMPORTED_MODULE_2__vuex___["a" /* default */].dispatch('auth/clearAuth');
+        __WEBPACK_IMPORTED_MODULE_1__router__["a" /* default */].replace({ name: 'login' });
+    });
 });
 
-// store.dispatch('auth/setToken').then(() => {
-//     console.log('fetch user');
-// });
+var app = new Vue({
+    el: '#app',
+    router: __WEBPACK_IMPORTED_MODULE_1__router__["a" /* default */],
+    store: __WEBPACK_IMPORTED_MODULE_2__vuex___["a" /* default */]
+});
 
 /***/ }),
 /* 15 */
@@ -48908,6 +48911,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setToken", function() { return setToken; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "checkTokenExists", function() { return checkTokenExists; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "fetchUser", function() { return fetchUser; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "clearAuth", function() { return clearAuth; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__helpers___ = __webpack_require__(65);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_lodash__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_lodash___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_lodash__);
@@ -48945,10 +48949,11 @@ var login = function login(_ref3, _ref4) {
 };
 
 var setToken = function setToken(_ref5, token) {
-    var commit = _ref5.commit;
+    var commit = _ref5.commit,
+        dispatch = _ref5.dispatch;
 
     if (Object(__WEBPACK_IMPORTED_MODULE_1_lodash__["isEmpty"])(token)) {
-        return dispatch('checkTokenExists').then(function (token) {
+        dispatch('checkTokenExists').then(function (token) {
             Object(__WEBPACK_IMPORTED_MODULE_0__helpers___["a" /* setHttpToken */])(token);
         });
     }
@@ -48959,8 +48964,8 @@ var setToken = function setToken(_ref5, token) {
 var checkTokenExists = function checkTokenExists(_ref6, token) {
     var commit = _ref6.commit;
 
-    return __WEBPACK_IMPORTED_MODULE_2_localforage___default.a.getItem('authToken').thne(function (token) {
-        if (Object(__WEBPACK_IMPORTED_MODULE_1_lodash__["isEmpty"])().token) {
+    return __WEBPACK_IMPORTED_MODULE_2_localforage___default.a.getItem('authToken').then(function (token) {
+        if (Object(__WEBPACK_IMPORTED_MODULE_1_lodash__["isEmpty"])(token)) {
             return Promise.reject("NO TOKEN AVAILABLE");
         }
         return Promise.resolve(token);
@@ -48974,6 +48979,15 @@ var fetchUser = function fetchUser(_ref7) {
         commit('setAuthenticated', true);
         commit('setUserData', response.data.data);
     });
+};
+
+var clearAuth = function clearAuth(_ref8) {
+    var commit = _ref8.commit;
+
+    commit('setAuthenticated', false);
+    commit('setUserData', null);
+    commit('settingToken', null);
+    Object(__WEBPACK_IMPORTED_MODULE_0__helpers___["a" /* setHttpToken */])(null);
 };
 
 /***/ }),
