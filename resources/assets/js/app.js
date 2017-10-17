@@ -32,6 +32,6 @@ const app = new Vue({
     store:store,
 });
 
-store.dispatch('auth/setToken').then(() => {
-    console.log('fetch user');
-});
+// store.dispatch('auth/setToken').then(() => {
+//     console.log('fetch user');
+// });
