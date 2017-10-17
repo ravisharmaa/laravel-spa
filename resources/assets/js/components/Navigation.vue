@@ -30,11 +30,17 @@
                     <ul class="nav navbar-nav navbar-right" v-else>
                         <li><router-link :to="{'name':'timeline'}">Timeline</router-link></li>
                         <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
                            aria-expanded="false">
                             {{user.data.name}}  <span class="caret"></span>
-                        </a>
-                    </li>
+                            </a>
+
+                        <ul class="dropdown-menu" role="menu">
+                            <li>
+                                <a href="#" @click.prevent="signout">Logout</a>
+                            </li>
+                        </ul>
+                        </li>
 
                     </ul>
 
@@ -49,11 +55,21 @@
 </template>
 
 <script>
-    import { mapGetters } from 'vuex'
+    import { mapGetters, mapActions } from 'vuex'
     export default {
         computed: mapGetters({
             user: 'auth/user'
-        })
+        }),
+        methods: {
+            ...mapActions({
+                logout:'auth/logout'
+            }),
+            signout () {
+                this.logout().then(() => {
+                    this.$router.replace({name:'login'})
+                })
+            }
+        }
 
     }
 </script>

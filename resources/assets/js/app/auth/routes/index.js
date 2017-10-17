@@ -2,7 +2,7 @@ import {Login,Register} from "../components";
 
 export default [
     {
-        path:'/login',
+        path:'',
         name:'login',
         component: Login,
         meta:{

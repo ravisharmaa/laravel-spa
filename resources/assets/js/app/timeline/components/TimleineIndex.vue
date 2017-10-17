@@ -14,7 +14,7 @@
 
         mounted () {
             return axios.get('/api/timeline').then((response) => {
-                console.log(response)
+                //console.log(response)
             })
         }
     }

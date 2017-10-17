@@ -23,6 +23,12 @@ export const login = ({dispatch},{payload,context}) => {
 
 };
 
+export const logout = ({commit,dispatch}) => {
+  return axios.get('/api/logout').then((response) => {
+      dispatch('clearAuth')
+  })
+};
+
 export const setToken = ({commit,dispatch}, token) => {
     if(isEmpty(token)){
            return dispatch('checkTokenExists').then((token) => {
