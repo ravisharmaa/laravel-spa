@@ -6,20 +6,21 @@ use App\Http\Requests\LoginRequest;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Tymon\JWTAuth\Exceptions\JWTException;
-use Tymon\JWTAuth\JWTAuth;
+use App\Http\Authentication\CustomAppAuth;
 use App\User;
 
 class AuthController extends Controller
 {
 	protected $auth;
 
-	public function __construct(JWTAuth $auth)
+	public function __construct(CustomAppAuth $auth)
 	{
 		$this->auth = $auth;
 	}
 
 	public function register(RegisterRequest $request)
 	{
+
 		$user = User::create([
 			'name'      => $request->name,
 			'email'     => $request->email,
@@ -35,10 +36,10 @@ class AuthController extends Controller
 		],200);
 	}
 
-	public function login(LoginRequest $request)
+	public function login(Request $request)
 	{
 		try{
-			if(!$token = $this->auth->attempt($request->only('email','password'))){
+			if(!$token = $this->auth->attempt($this->__convertCredentials($request->only('email','password')))){
 				return response()->json([
 					'errors'=>[
 						'root'=>'Sorry we could not find such account!!'
@@ -52,8 +53,6 @@ class AuthController extends Controller
 			],$exception->getStatusCode());
 
 		}
-
-
 		return response()->json([
 			'data'=>$request->user(),
 			'meta'=>[
@@ -77,7 +76,11 @@ class AuthController extends Controller
 	}
 
 
-	public function getTimeLine() {
-		dd('here');
+	public function __convertCredentials($credentials)
+	{
+		$data['UserName'] = $credentials['email'];
+		$data['PassWord'] = ($credentials['password']);
+		return $data;
+
 	}
 }
